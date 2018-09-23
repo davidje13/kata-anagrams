@@ -59,6 +59,35 @@ public class AnagramFinderTest {
 	}
 
 	@Test
+	public void findAnagrams_doesNotConsiderDuplicatesAnagrams() {
+		Stream<String> words = Stream.of("ab", "ab");
+
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
+
+		assertThat(anagrams, hasSize(0));
+	}
+
+	@Test
+	public void findAnagrams_doesNotConsiderMixedCaseDuplicatesAnagrams() {
+		Stream<String> words = Stream.of("ab", "AB");
+
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
+
+		assertThat(anagrams, hasSize(0));
+	}
+
+	@Test
+	public void findAnagrams_returnsAllCaseFormatsIfAnagramsAreFound() {
+		Stream<String> words = Stream.of("ab", "AB", "ba");
+
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
+
+		assertThat(anagrams, containsInAnyOrder(asList(
+				containsInAnyOrder("ab", "AB", "ba")
+		)));
+	}
+
+	@Test
 	public void findAnagrams_combinesAllAnagramsOfTheSameWord() {
 		Stream<String> words = Stream.of("abc", "cba", "bca");
 
