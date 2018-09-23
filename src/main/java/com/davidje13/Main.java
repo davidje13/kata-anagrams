@@ -27,6 +27,7 @@ public class Main {
 	private static void parseWords(Stream<String> words) {
 		AnagramFinder finder = new AnagramFinder();
 		finder.findAnagrams(words)
-				.forEach((group) -> System.out.println(String.join(" ", group)));
+				.map((group) -> String.join(" ", group))
+				.forEach(System.out::println);
 	}
 }

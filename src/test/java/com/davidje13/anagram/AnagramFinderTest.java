@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
@@ -21,7 +22,7 @@ public class AnagramFinderTest {
 	public void findAnagrams_returnsSetOfIdentifiedAnagrams() {
 		Stream<String> words = Stream.of("ab", "ba");
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, containsInAnyOrder(asList(
 				containsInAnyOrder("ab", "ba")
@@ -32,7 +33,7 @@ public class AnagramFinderTest {
 	public void findAnagrams_returnsNothingIfInputIsEmpty() {
 		Stream<String> words = Stream.empty();
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, hasSize(0));
 	}
@@ -41,7 +42,7 @@ public class AnagramFinderTest {
 	public void findAnagrams_excludesWordsWithoutAnagrams() {
 		Stream<String> words = Stream.of("ab", "aa");
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, hasSize(0));
 	}
@@ -50,7 +51,7 @@ public class AnagramFinderTest {
 	public void findAnagrams_isCaseInsensitive() {
 		Stream<String> words = Stream.of("ab", "BA");
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, containsInAnyOrder(asList(
 				containsInAnyOrder("ab", "BA")
@@ -61,7 +62,7 @@ public class AnagramFinderTest {
 	public void findAnagrams_combinesAllAnagramsOfTheSameWord() {
 		Stream<String> words = Stream.of("abc", "cba", "bca");
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, containsInAnyOrder(asList(
 				containsInAnyOrder("abc", "cba", "bca")
@@ -79,7 +80,7 @@ public class AnagramFinderTest {
 				"god"
 		);
 
-		Set<Set<String>> anagrams = finder.findAnagrams(words);
+		Set<Set<String>> anagrams = finder.findAnagrams(words).collect(toSet());
 
 		assertThat(anagrams, containsInAnyOrder(asList(
 				containsInAnyOrder("abc", "cba", "bca"),

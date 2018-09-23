@@ -8,11 +8,10 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 
 public class AnagramFinder {
-	public Set<Set<String>> findAnagrams(Stream<String> words) {
+	public Stream<Set<String>> findAnagrams(Stream<String> words) {
 		return words.collect(groupingBy(this::normalise, toSet()))
 				.values().stream()
-				.filter((group) -> group.size() > 1)
-				.collect(toSet());
+				.filter((group) -> group.size() > 1);
 	}
 
 	private String normalise(String word) {
