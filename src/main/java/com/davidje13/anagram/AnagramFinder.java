@@ -2,6 +2,7 @@ package com.davidje13.anagram;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -10,7 +11,15 @@ import static java.util.stream.Collectors.toSet;
 
 public class AnagramFinder {
 	public Stream<Set<String>> findAnagrams(Stream<String> words) {
-		return words.collect(groupingBy(this::normalise, toSet()))
+		return findAnagrams(words, 1024);
+	}
+
+	public Stream<Set<String>> findAnagrams(
+			Stream<String> words,
+			int initialCapacity
+	) {
+		return words.collect(
+				groupingBy(this::normalise, () -> new HashMap<>(initialCapacity), toSet()))
 				.values().stream()
 				.filter(this::hasDistinctValues);
 	}
