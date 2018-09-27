@@ -12,6 +12,8 @@ class OptionParser {
 		for (String arg : args) {
 			if (SORT_ORDERS.containsKey(arg)) {
 				options.sortOrder = SORT_ORDERS.get(arg);
+			} else if (options.wordListFile == null) {
+				options.wordListFile = arg;
 			}
 		}
 
@@ -19,7 +21,12 @@ class OptionParser {
 	}
 
 	static class Options {
+		private String wordListFile = null;
 		private Comparator<Set<String>> sortOrder = ANY_ORDER;
+
+		String getWordListFile() {
+			return wordListFile;
+		}
 
 		Comparator<Set<String>> getSortOrder() {
 			return sortOrder;

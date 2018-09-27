@@ -1,9 +1,10 @@
 package com.davidje13;
 
+import com.davidje13.testutil.IntegrationTestUtils.Output;
 import org.junit.Test;
 
-import static com.davidje13.testutil.IntegrationTestUtils.getStdOutFrom;
-import static com.davidje13.testutil.IntegrationTestUtils.setStdInContent;
+import static com.davidje13.testutil.IntegrationTestUtils.getOutputFrom;
+import static com.davidje13.testutil.IntegrationTestUtils.getResource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -13,80 +14,93 @@ import static org.hamcrest.Matchers.not;
 public class MainIntegrationTest {
 	@Test
 	public void main_reportsCollectionsOfWordsWhichAreAnagrams() {
-		String input = "foo\nbar\noof\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("simple.txt").getPath()
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(this::runWithArguments);
-
-		assertThat(out, anyOf(
+		assertThat(output.out, anyOf(
 				equalTo("foo oof\n"),
 				equalTo("oof foo\n")
 		));
+		assertThat(output.err, equalTo(""));
 	}
 
 	@Test
 	public void main_reportsMultipleCollections() {
-		String input = "ab\nfoo\nba\nOOF\nnope\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("multiple.txt").getPath()
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(this::runWithArguments);
-
-		assertThat(out, containsString("ab"));
-		assertThat(out, containsString("foo"));
-		assertThat(out, containsString("ba"));
-		assertThat(out, containsString("OOF"));
-		assertThat(out, not(containsString("nope")));
+		assertThat(output.out, containsString("ab"));
+		assertThat(output.out, containsString("foo"));
+		assertThat(output.out, containsString("ba"));
+		assertThat(output.out, containsString("OOF"));
+		assertThat(output.out, not(containsString("nope")));
 	}
 
 	@Test
 	public void main_sortsMostWordsLast() {
-		String input = "abc\nbac\ncab\nfoo\noof\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("word-count.txt").getPath(),
+				"--words-asc"
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(() -> runWithArguments("--words-asc"));
-
-		String[] lines = out.split("\n");
+		String[] lines = output.out.split("\n");
 		assertThat(lines[0], containsString("foo"));
 		assertThat(lines[1], containsString("abc"));
 	}
 
 	@Test
 	public void main_sortsMostWordsFirst() {
-		String input = "abc\nbac\ncab\nfoo\noof\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("word-count.txt").getPath(),
+				"--words-desc"
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(() -> runWithArguments("--words-desc"));
-
-		String[] lines = out.split("\n");
+		String[] lines = output.out.split("\n");
 		assertThat(lines[0], containsString("abc"));
 		assertThat(lines[1], containsString("foo"));
 	}
 
 	@Test
 	public void main_sortsLongestWordsLast() {
-		String input = "abc\ncba\nab\nba\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("word-length.txt").getPath(),
+				"--length-asc"
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(() -> runWithArguments("--length-asc"));
-
-		String[] lines = out.split("\n");
+		String[] lines = output.out.split("\n");
 		assertThat(lines[0], containsString("ab"));
 		assertThat(lines[1], containsString("abc"));
 	}
 
 	@Test
 	public void main_sortsLongestWordsFirst() {
-		String input = "abc\ncba\nab\nba\n";
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("word-length.txt").getPath(),
+				"--length-desc"
+		}));
 
-		setStdInContent(input);
-		String out = getStdOutFrom(() -> runWithArguments("--length-desc"));
-
-		String[] lines = out.split("\n");
+		String[] lines = output.out.split("\n");
 		assertThat(lines[0], containsString("abc"));
 		assertThat(lines[1], containsString("ab"));
 	}
 
-	private void runWithArguments(String... args) {
-		Main.main(args);
+	@Test
+	public void main_reportsAnErrorIfTheWordListIsNotFound() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{"nope"}));
+
+		assertThat(output.out, equalTo(""));
+		assertThat(output.err, equalTo(
+				"Failed to load word list from nope\n"
+		));
+	}
+
+	@Test
+	public void main_printsUsageInformationIfNoInputGiven() {
+		Output output = getOutputFrom(() -> Main.main(new String[] {}));
+
+		assertThat(output.out, equalTo(""));
+		assertThat(output.err, containsString("Usage:"));
 	}
 }

@@ -15,7 +15,7 @@ The kata specification is here: http://codekata.com/kata/kata06-anagrams/
 ## Running
 
 ```sh
-./gradlew installDist && ./build/install/anagrams/bin/anagrams < /usr/share/dict/words
+./gradlew run --args='/usr/share/dict/words'
 ```
 
 Identified anagrams will be printed to stdout.
