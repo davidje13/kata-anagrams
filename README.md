@@ -21,9 +21,14 @@ The kata specifications are here:
 ## Running
 
 ```sh
+# Report all anagrams in wordlist
 ./gradlew run --args='/usr/share/dict/words --length-asc'
 
+# Report all multi-word anagrams of the input word
 ./gradlew run --args='/usr/share/dict/words documenting --words-desc'
+
+# Report all words contained within the input word ("countdown"-style)
+./gradlew run --args='/usr/share/dict/words documenting --length-asc'
 ```
 
 Identified anagrams will be printed to stdout.

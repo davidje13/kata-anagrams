@@ -125,6 +125,18 @@ public class MainIntegrationTest {
 	}
 
 	@Test
+	public void main_reportsLongestWordsWithinASource() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("simple.txt").getPath(),
+				"azbrz",
+				"--length-desc"
+		}));
+
+		assertThat(output.out, equalTo("bar\n"));
+		assertThat(output.err, equalTo(""));
+	}
+
+	@Test
 	public void main_reportsAnErrorIfTheWordListIsNotFound() {
 		Output output = getOutputFrom(() -> Main.main(new String[]{"nope"}));
 

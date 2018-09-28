@@ -38,6 +38,13 @@ public class Main {
 					.sorted(options.getSortOrder())
 					.map((group) -> String.join(" ", group))
 					.forEach(System.out::println);
+		} else if (options.isLengthBased()) {
+			for (String word : options.getWords()) {
+				finder.findWordsWithin(word)
+						.sorted(options.getSortOrder())
+						.map((group) -> String.join(" ", group))
+						.forEach(System.out::println);
+			}
 		} else {
 			for (String word : options.getWords()) {
 				finder.findMultiWordAnagrams(word, 3)

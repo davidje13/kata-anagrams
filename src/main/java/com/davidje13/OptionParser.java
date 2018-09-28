@@ -14,6 +14,9 @@ class OptionParser {
 		for (String arg : args) {
 			if (SORT_ORDERS.containsKey(arg)) {
 				options.sortOrder = SORT_ORDERS.get(arg);
+				if (arg.startsWith("--length-")) {
+					options.lengthBased = true;
+				}
 			} else if (options.wordListFile == null) {
 				options.wordListFile = arg;
 			} else {
@@ -28,6 +31,7 @@ class OptionParser {
 		private String wordListFile = null;
 		private final List<String> words = new ArrayList<>();
 		private Comparator<Collection<String>> sortOrder = ANY_ORDER;
+		private boolean lengthBased = false;
 
 		String getWordListFile() {
 			return wordListFile;
@@ -39,6 +43,10 @@ class OptionParser {
 
 		Comparator<Collection<String>> getSortOrder() {
 			return sortOrder;
+		}
+
+		boolean isLengthBased() {
+			return lengthBased;
 		}
 	}
 

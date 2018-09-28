@@ -1,21 +1,26 @@
 package com.davidje13.anagram;
 
+import com.davidje13.permutation.PermutationExpander;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class AnagramFinder {
+	private final PermutationExpander expander = new PermutationExpander();
 	private final Map<String, Set<String>> groupedWords = new HashMap<>();
 
 	public void loadWords(Stream<String> words) {
@@ -34,6 +39,22 @@ public class AnagramFinder {
 		return groupedWords
 				.values().stream()
 				.filter(AnagramFinder::hasDistinctValues);
+	}
+
+	public Stream<Set<String>> findWordsWithin(String word) {
+		return getAllVariants(normalise(word))
+				.distinct()
+				.map(groupedWords::get)
+				.filter(Objects::nonNull);
+	}
+
+	private Stream<String> getAllVariants(CharSequence word) {
+		List<List<String>> choices = IntStream.range(0, word.length())
+				.mapToObj((i) -> asList(String.valueOf(word.charAt(i)), ""))
+				.collect(toList());
+
+		return expander.expand(choices)
+				.map((l) -> String.join("", l));
 	}
 
 	public Stream<Collection<Set<String>>> findMultiWordAnagrams(

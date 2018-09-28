@@ -140,6 +140,53 @@ public class AnagramFinderTest {
 	}
 
 	@Test
+	public void findWordsWithin_returnsFullAnagramsIfFound() {
+		finder.loadWords(Stream.of("abc", "bac", "def"));
+
+		Set<Set<String>> anagrams = finder.findWordsWithin("cba")
+				.collect(toSet());
+
+		assertThat(anagrams, containsInAnyOrder(asList(
+				containsInAnyOrder("abc", "bac")
+		)));
+	}
+
+	@Test
+	public void findWordsWithin_returnsShorterWordsIfFound() {
+		finder.loadWords(Stream.of("abc", "bac", "def"));
+
+		Set<Set<String>> anagrams = finder.findWordsWithin("cbad")
+				.collect(toSet());
+
+		assertThat(anagrams, containsInAnyOrder(asList(
+				containsInAnyOrder("abc", "bac")
+		)));
+	}
+
+	@Test
+	public void findWordsWithin_returnsAllIdentifiedWords() {
+		finder.loadWords(Stream.of("abc", "bac", "ad"));
+
+		Set<Set<String>> anagrams = finder.findWordsWithin("cbad")
+				.collect(toSet());
+
+		assertThat(anagrams, containsInAnyOrder(asList(
+				containsInAnyOrder("abc", "bac"),
+				containsInAnyOrder("ad")
+		)));
+	}
+
+	@Test
+	public void findWordsWithin_returnsNothingIfNoWordsAreFound() {
+		finder.loadWords(Stream.of("xyz"));
+
+		Set<Set<String>> anagrams = finder.findWordsWithin("cbad")
+				.collect(toSet());
+
+		assertThat(anagrams, hasSize(0));
+	}
+
+	@Test
 	public void findMultiWordAnagrams_returnsWordsFormingAnagramsOfTheInput() {
 		finder.loadWords(Stream.of("abc", "def", "ghi", "jkl"));
 
