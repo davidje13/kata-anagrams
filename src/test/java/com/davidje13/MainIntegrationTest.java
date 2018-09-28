@@ -3,12 +3,16 @@ package com.davidje13;
 import com.davidje13.testutil.IntegrationTestUtils.Output;
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.davidje13.testutil.IntegrationTestUtils.getOutputFrom;
 import static com.davidje13.testutil.IntegrationTestUtils.getResource;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 
 public class MainIntegrationTest {
@@ -84,6 +88,40 @@ public class MainIntegrationTest {
 		String[] lines = output.out.split("\n");
 		assertThat(lines[0], containsString("abc"));
 		assertThat(lines[1], containsString("ab"));
+	}
+
+	@Test
+	public void main_reportsAnagramsOfTheGivenWordIfSpecified() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("simple.txt").getPath(),
+				"abr"
+		}));
+
+		assertThat(output.out, equalTo("bar\n"));
+		assertThat(output.err, equalTo(""));
+	}
+
+	@Test
+	public void main_reportsNothingIfTheGivenWordHasNoAnagrams() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("simple.txt").getPath(),
+				"no"
+		}));
+
+		assertThat(output.out, equalTo(""));
+		assertThat(output.err, equalTo(""));
+	}
+
+	@Test
+	public void main_reportsMultiWordAnagramsOfTheGivenWordIfSpecified() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				getResource("simple.txt").getPath(),
+				"fabroo"
+		}));
+
+		List<String> lines = asList(output.out.split("\n"));
+		assertThat(lines, hasItem(anyOf(equalTo("foo bar"), equalTo("bar foo"))));
+		assertThat(lines, hasItem(anyOf(equalTo("oof bar"), equalTo("bar oof"))));
 	}
 
 	@Test

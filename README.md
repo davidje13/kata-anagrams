@@ -1,10 +1,16 @@
 # Anagram Finder
 
-Implementation of a kata to find anagrams in a list of words.
+Implementation of katas to:
+
+* find anagrams in a list of words
+* find n-word anagrams of an input word (up to 3 words)
 
 ---
 
-The kata specification is here: http://codekata.com/kata/kata06-anagrams/
+The kata specifications are here:
+
+* http://codekata.com/kata/kata06-anagrams/
+* http://codingdojo.org/kata/Anagram/
 
 ## Testing
 
@@ -15,7 +21,9 @@ The kata specification is here: http://codekata.com/kata/kata06-anagrams/
 ## Running
 
 ```sh
-./gradlew run --args='/usr/share/dict/words'
+./gradlew run --args='/usr/share/dict/words --length-asc'
+
+./gradlew run --args='/usr/share/dict/words documenting --words-desc'
 ```
 
 Identified anagrams will be printed to stdout.
@@ -28,3 +36,11 @@ The order of the output can be controlled with the following flags:
 * `--words-asc`: sets with the most words last
 * `--length-desc`: sets with the longest words first
 * `--length-asc`: sets with the longest words first
+
+## Profiling
+
+The executable can be profiled using:
+
+```sh
+./gradlew installDist && time ./build/install/anagrams/bin/anagrams /usr/share/dict/words documenting
+```

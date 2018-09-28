@@ -1,9 +1,11 @@
 package com.davidje13;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 class OptionParser {
 	Options parseOptions(String[] args) {
@@ -14,6 +16,8 @@ class OptionParser {
 				options.sortOrder = SORT_ORDERS.get(arg);
 			} else if (options.wordListFile == null) {
 				options.wordListFile = arg;
+			} else {
+				options.words.add(arg);
 			}
 		}
 
@@ -22,27 +26,32 @@ class OptionParser {
 
 	static class Options {
 		private String wordListFile = null;
-		private Comparator<Set<String>> sortOrder = ANY_ORDER;
+		private final List<String> words = new ArrayList<>();
+		private Comparator<Collection<String>> sortOrder = ANY_ORDER;
 
 		String getWordListFile() {
 			return wordListFile;
 		}
 
-		Comparator<Set<String>> getSortOrder() {
+		List<String> getWords() {
+			return words;
+		}
+
+		Comparator<Collection<String>> getSortOrder() {
 			return sortOrder;
 		}
 	}
 
-	private static final Comparator<Set<String>> ANY_ORDER =
+	private static final Comparator<Collection<String>> ANY_ORDER =
 			Comparator.comparingInt((o) -> 0);
 
-	private static final Comparator<Set<String>> MOST_WORDS_LAST =
-			Comparator.comparingInt(Set::size);
+	private static final Comparator<Collection<String>> MOST_WORDS_LAST =
+			Comparator.comparingInt(Collection::size);
 
-	private static final Comparator<Set<String>> LONGEST_WORDS_LAST =
+	private static final Comparator<Collection<String>> LONGEST_WORDS_LAST =
 			Comparator.comparingInt((set) -> set.iterator().next().length());
 
-	private static final Map<String, Comparator<Set<String>>> SORT_ORDERS;
+	private static final Map<String, Comparator<Collection<String>>> SORT_ORDERS;
 
 	static {
 		SORT_ORDERS = new HashMap<>();
