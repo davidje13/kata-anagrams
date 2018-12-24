@@ -153,4 +153,19 @@ public class MainIntegrationTest {
 		assertThat(output.out, equalTo(""));
 		assertThat(output.err, containsString("Usage:"));
 	}
+
+	@Test
+	public void main_printsFormulaWhenCalledWithNumbers() {
+		Output output = getOutputFrom(() -> Main.main(new String[]{
+				"2",
+				"3",
+				"5"
+		}));
+
+		assertThat(output.out, equalTo(
+				"3 + 2 = 5\n" +
+				"= 5\n"
+		));
+		assertThat(output.err, equalTo(""));
+	}
 }

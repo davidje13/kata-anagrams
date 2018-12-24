@@ -20,6 +20,8 @@ The kata specifications are here:
 
 ## Running
 
+### Anagrams
+
 ```sh
 # Report all anagrams in wordlist
 ./gradlew run --args='/usr/share/dict/words --length-asc'
@@ -32,6 +34,15 @@ The kata specifications are here:
 ```
 
 Identified anagrams will be printed to stdout.
+
+### Equations
+
+```sh
+# Combine the given inputs to reach a target
+./gradlew run --args='2 7 9 10 25 75 268'
+```
+
+Any identified equation is printed to stdout.
 
 ### Flags
 
